@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: haproxy
+  namespace: argocd
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: haproxy
+  project: default
+  source:
+    path: argocd-yaml/haproxy
+    repoURL: https://github.com/martivo/kind-lab.git
+    targetRevision: HEAD
+    helm:
+      releaseName: haproxy
+      parameters:
+      - name: registry
+        value: "{{ .Values.registry }}"
+      - name: httpport
+        value: "80"
+      - name: httpsport
+        value: "443"
+      - name: monitoringport
+        value: "1026"
+      - name: isdefault
+        value: "true"
+      - name: certsecret
+        value: "certbot-ext/ssl"
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true 
+    syncOptions:
+    - CreateNamespace=true
