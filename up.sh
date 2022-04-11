@@ -11,7 +11,7 @@ kubectl config get-contexts | grep kind
 kubectl --context kind-test create ns argocd && \
   helm template argocd-yaml/argocd/ | kubectl --context kind-test apply -n argocd -f- #https://argo-cd.readthedocs.io/en/stable/getting_started/ and https://argo-cd.readthedocs.io/en/stable/operator-manual/installation/
 
-kubectl --context kind-test create ns argocd && \
+kubectl --context kind-prod create ns argocd && \
   helm template argocd-yaml/argocd/ | kubectl --context kind-prod apply -n argocd -f- #https://argo-cd.readthedocs.io/en/stable/getting_started/ and https://argo-cd.readthedocs.io/en/stable/operator-manual/installation/
 
 #Create app of apps in argocd
