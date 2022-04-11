@@ -1,6 +1,6 @@
 
 runenv: ""
-number: ""
+number: 1
 
 web:
   replicaCount: 2
