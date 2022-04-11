@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  project: default
+  source:
+    path: argocd-yaml/argocd
+    repoURL: https://github.com/martivo/kind-lab-thesis.git
+    targetRevision: HEAD
+    helm:
+      parameters:
+      - name: runenv
+        value: {{ .Values.runenv }}
+      - name: internaldomain
+        value: {{ .Values.internaldomain }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

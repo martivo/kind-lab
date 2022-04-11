@@ -1,0 +1,7 @@
+#https://kind.sigs.k8s.io/docs/user/loadbalancer/
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: metallb-system
+  labels:
+    app: metallb

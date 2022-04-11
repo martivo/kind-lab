@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: {{ .Release.Name }}-ingress
+  name: {{ .Release.Name }}-ingress
+  annotations: 
+    external-dns.alpha.kubernetes.io/hostname: "*.{{ .Values.route53domain }}"
+spec:
+  selector:
+    run: {{ .Release.Name }}-ingress
+  type: LoadBalancer
+  externalTrafficPolicy: Local #https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip and https://metallb.universe.tf/usage/#layer2
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: {{ .Values.httpport }}
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: {{ .Values.httpsport }}
+  - name: stat
+    port: 1024
+    protocol: TCP
+    targetPort: {{ .Values.monitoringport }}

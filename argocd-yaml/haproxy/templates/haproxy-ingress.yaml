@@ -1,0 +1,244 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Release.Name }}-ingress
+---
+#https://www.haproxy.com/documentation/kubernetes/latest/configuration/ingressclass/
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: {{ .Release.Name }}
+  annotations:
+    ingressclass.kubernetes.io/is-default-class: "{{ .Values.isdefault }}"
+spec:
+  controller: haproxy.org/ingress-controller/{{ .Release.Name }}
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ .Release.Name }}-ingress
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  - endpoints
+  - nodes
+  - pods
+  - services
+  - namespaces
+  - events
+  - serviceaccounts
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - "extensions"
+  - "networking.k8s.io"
+  resources:
+  - ingresses
+  - ingresses/status
+  - ingressclasses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - "extensions"
+  - "networking.k8s.io"
+  resources:
+  - ingresses/status
+  verbs:
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - patch
+  - update
+- apiGroups:
+  - core.haproxy.org
+  resources:
+     - '*'
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+- apiGroups:
+  - "discovery.k8s.io"
+  resources:
+  - endpointslices
+  verbs:
+  - get
+  - list
+  - watch
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ .Release.Name }}-ingress
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ .Release.Name }}-ingress
+subjects:
+- kind: ServiceAccount
+  name: {{ .Release.Name }}-ingress
+  namespace: {{ .Release.Name }}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-ingress
+data:
+  ssl-certificate: "{{ .Values.certsecret }}"
+  stats-config-snippet: |
+      bind *:{{ .Values.monitoringport }}
+      bind :::{{ .Values.monitoringport }} name v6
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-tcp
+data:
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: ingress-default-backend
+  name: {{ .Release.Name }}-ingress-default-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: ingress-default-backend
+  template:
+    metadata:
+      labels:
+        run: ingress-default-backend
+    spec:
+{{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+{{- end }}
+{{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+{{- end }}
+      containers:
+      - name: ingress-default-backend
+        image: gcr.io/google_containers/defaultbackend:1.0
+        ports:
+        - containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: ingress-default-backend
+  name: {{ .Release.Name }}-ingress-default-backend
+spec:
+  selector:
+    run: ingress-default-backend
+  ports:
+  - name: port-1
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    run: {{ .Release.Name }}-ingress
+  name: {{ .Release.Name }}-ingress
+spec:
+  selector:
+    matchLabels:
+      run: {{ .Release.Name }}-ingress
+  template:
+    metadata:
+      labels:
+        run: {{ .Release.Name }}-ingress
+      annotations:
+        prometheus.io/port: "{{ .Values.monitoringport }}"
+        prometheus.io/scrape: "true"
+    spec:
+{{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+{{- end }}
+{{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+{{- end }}
+      serviceAccountName: {{ .Release.Name }}-ingress
+      containers:
+      - name: haproxy-ingress
+        image: haproxytech/kubernetes-ingress:1.7.3
+        args:
+          - --configmap={{ .Release.Name }}/{{ .Release.Name }}-ingress
+          - --default-backend-service={{ .Release.Name }}/{{ .Release.Name }}-ingress-default-backend
+          - --http-bind-port={{ .Values.httpport }} --https-bind-port={{ .Values.httpsport }}
+          - --ingress.class={{ .Release.Name }} {{ if $.Values.isdefault }}--empty-ingress-class{{ end }}
+          - --publish-service={{ .Release.Name }}/{{ .Release.Name }}-ingress
+          - --configmap-tcp-services={{ .Release.Name }}/{{ .Release.Name }}-tcp
+        securityContext:
+          runAsUser:  1000
+          runAsGroup: 1000
+          capabilities:
+            drop:
+              - ALL
+            add:
+              - NET_BIND_SERVICE
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "50Mi"
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 1042
+        ports:
+        - name: http
+          containerPort: {{ .Values.httpport }}
+          hostPort: {{ .Values.httpport }}
+        - name: https
+          containerPort: {{ .Values.httpsport }}
+          hostPort: {{ .Values.httpsport }}
+        - name: stat
+          containerPort: {{ .Values.monitoringport }}
+          hostPort: {{ .Values.monitoringport }}
+        env:
+        - name: TZ
+          value: "Etc/UTC"
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+      initContainers:
+        - name: sysctl
+          image: busybox:musl
+          command:
+            - /bin/sh
+            - -c
+            - sysctl -w net.ipv4.ip_unprivileged_port_start=0
+          securityContext:
+            privileged: true

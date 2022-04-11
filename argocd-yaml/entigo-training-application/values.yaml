@@ -1,0 +1,15 @@
+
+runenv: ""
+externaldomain: ""
+
+web:
+  replicaCount: 2
+  image: entigolabs/entigo-kubernetes-training-application:web-v1
+  
+api:
+  replicaCount: 2
+  image: entigolabs/entigo-kubernetes-training-application:api-v1
+  redisHost: redis
+
+redis:
+  image: redis:6

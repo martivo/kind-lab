@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-applications
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    helm:
+      parameters:
+      - name: runenv
+        value: {{ .Values.runenv }}
+      - name: externaldomain
+        value: {{ .Values.externaldomain }}
+      - name: internaldomain
+        value: {{ .Values.internaldomain }}
+      - name: iprange
+        value: {{ .Values.iprange }}
+      - name: registry
+        value: {{ .Values.registry }}
+    path: argocd-applications
+    repoURL: https://github.com/martivo/kind-lab-thesis.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+

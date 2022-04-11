@@ -1,0 +1,12 @@
+
+
+iprange: 10.250.1.200-10.250.1.230
+
+nodeSelector:
+  ingress: "true"
+
+tolerations:
+- key: "ingress"
+  operator: "Equal"
+  value: "true"
+  effect: "NoSchedule"
