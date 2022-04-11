@@ -9,4 +9,8 @@ data:
     - name: default
       protocol: layer2
       addresses:
-      - 172.18.0.2{{ .Values.number }}0-172.18.0.2{{ .Values.number }}9
+{{- if eq .Values.runenv "prod" }}
+      - 172.18.0.200-172.18.0.209
+{{- else }}
+      - 172.18.0.210-172.18.0.219
+{{- end }}

@@ -13,8 +13,8 @@ spec:
     targetRevision: HEAD
     helm:
       parameters:
-      - name: number
-        value: {{ .Values.number | quote }}
+      - name: runenv
+        value: {{ .Values.runenv | quote }}
   syncPolicy:
     automated:
       prune: true
