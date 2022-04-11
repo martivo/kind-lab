@@ -9,7 +9,7 @@ spec:
   project: default
   source:
     path: argocd-yaml/metallb
-    repoURL: https://github.com/martivo/kind-lab-thesis.git
+    repoURL: https://github.com/martivo/kind-lab.git
     targetRevision: HEAD
     helm:
       parameters:

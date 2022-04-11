@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     path: argocd-yaml/haproxy
-    repoURL: https://github.com/martivo/kind-lab-thesis.git
+    repoURL: https://github.com/martivo/kind-lab.git
     targetRevision: HEAD
     helm:
       releaseName: haproxy-ext

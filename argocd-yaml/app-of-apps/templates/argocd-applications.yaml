@@ -20,7 +20,7 @@ spec:
       - name: registry
         value: {{ .Values.registry }}
     path: argocd-applications
-    repoURL: https://github.com/martivo/kind-lab-thesis.git
+    repoURL: https://github.com/martivo/kind-lab.git
     targetRevision: HEAD
   syncPolicy:
     automated:
