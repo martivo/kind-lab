@@ -1,11 +1,10 @@
 
-registry: "kreg.learn.entigo.io/hub"
-route53domain: ""
+registry: ""
 httpport: "80"
 httpsport: "443"
 monitoringport: "1024"
 isdefault: true
-certsecret: ""
+
 
 nodeSelector:
   ingress: "true"

@@ -16,8 +16,8 @@ spec:
       parameters:
       - name: runenv
         value: {{ .Values.runenv }}
-      - name: externaldomain
-        value: {{ .Values.externaldomain }}
+      - name: number
+        value: {{ .Values.number }}
   syncPolicy:
     automated:
       prune: true

@@ -4,8 +4,6 @@ metadata:
   labels:
     run: {{ .Release.Name }}-ingress
   name: {{ .Release.Name }}-ingress
-  annotations: 
-    external-dns.alpha.kubernetes.io/hostname: "*.{{ .Values.route53domain }}"
 spec:
   selector:
     run: {{ .Release.Name }}-ingress

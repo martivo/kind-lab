@@ -11,14 +11,8 @@ spec:
       parameters:
       - name: runenv
         value: {{ .Values.runenv }}
-      - name: externaldomain
-        value: {{ .Values.externaldomain }}
-      - name: internaldomain
-        value: {{ .Values.internaldomain }}
-      - name: iprange
-        value: {{ .Values.iprange }}
-      - name: registry
-        value: {{ .Values.registry }}
+      - name: number
+        value: {{ .Values.number }}
     path: argocd-applications
     repoURL: https://github.com/martivo/kind-lab.git
     targetRevision: HEAD

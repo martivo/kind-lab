@@ -100,7 +100,6 @@ kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}-ingress
 data:
-  ssl-certificate: "{{ .Values.certsecret }}"
   stats-config-snippet: |
       bind *:{{ .Values.monitoringport }}
       bind :::{{ .Values.monitoringport }} name v6

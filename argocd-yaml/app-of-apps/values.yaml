@@ -1,6 +1,4 @@
 
 runenv: ""
-internaldomain: ""
-externaldomain: ""
-iprange: ""
+number: ""
 registry: "kreg.learn.entigo.io/hub"

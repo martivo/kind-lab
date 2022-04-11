@@ -13,8 +13,8 @@ spec:
     targetRevision: HEAD
     helm:
       parameters:
-      - name: iprange
-        value: {{ .Values.iprange }}
+      - name: number
+        value: {{ .Values.number }}
   syncPolicy:
     automated:
       prune: true

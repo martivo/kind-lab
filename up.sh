@@ -29,5 +29,15 @@ do
 done
 
 #Create app of apps in argocd
-helm template argocd-yaml/app-of-apps/ --set runenv="test" --set internaldomain="argocd-$1.learn.entigo.io" --set externaldomain="kind-$1.learn.entigo.io" --set iprange="172.18.0.200-172.18.0.209" | kubectl --context kind-test apply -n argocd -f-
-helm template argocd-yaml/app-of-apps/ --set runenv="prod" --set internaldomain="argocd-$1.learn.entigo.io" --set externaldomain="kind-$1.learn.entigo.io" --set iprange="172.18.0.210-172.18.0.219" | kubectl --context kind-prod apply -n argocd -f-
+helm template argocd-yaml/app-of-apps/ --set runenv="test" --set number="$1" | kubectl --context kind-test apply -n argocd -f-
+helm template argocd-yaml/app-of-apps/ --set runenv="prod" --set number="$1" | kubectl --context kind-prod apply -n argocd -f-
+
+prod_ip=$(kubectl --context=kind-prod get svc -n haproxy haproxy-ingress --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
+iptables -I FORWARD -p tcp -d $prod_ip --match multiport --dports 80,443 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -t nat -I PREROUTING -p tcp -i ens5 --dport 80 -j DNAT --to-destination $prod_ip:80
+iptables -t nat -I PREROUTING -p tcp -i ens5 --dport 443 -j DNAT --to-destination $prod_ip:443
+
+test_ip=$(kubectl --context=kind-test get svc -n haproxy haproxy-ingress --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
+iptables -I FORWARD -p tcp -d $test_ip --match multiport --dports 80,443 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -t nat -I PREROUTING -p tcp -i ens5 --dport 8080 -j DNAT --to-destination $test_ip:80
+iptables -t nat -I PREROUTING -p tcp -i ens5 --dport 8444 -j DNAT --to-destination $test_ip:443
