@@ -41,4 +41,4 @@ iptables -t nat -I PREROUTING -p tcp -i ens5 --dport 443 -j DNAT --to-destinatio
 test_ip=$(kubectl --context=kind-test get svc -n haproxy haproxy-ingress --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
 iptables -I FORWARD -p tcp -d $test_ip --match multiport --dports 80,443 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
 iptables -t nat -I PREROUTING -p tcp -i ens5 --dport 8080 -j DNAT --to-destination $test_ip:80
-iptables -t nat -I PREROUTING -p tcp -i ens5 --dport 8444 -j DNAT --to-destination $test_ip:443
+iptables -t nat -I PREROUTING -p tcp -i ens5 --dport 8443 -j DNAT --to-destination $test_ip:443

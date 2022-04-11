@@ -3,7 +3,8 @@ kind: Ingress
 metadata:
   name: argocd-server-ingress
   annotations:
-    haproxy.org/ssl-redirect: "true" #https://www.haproxy.com/documentation/kubernetes/latest/configuration/ingress/
+    haproxy.org/ssl-redirect: "false" #https://www.haproxy.com/documentation/kubernetes/latest/configuration/ingress/
+    ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   rules:
   - host: "argocd-{{ .Values.number }}.learn.entigo.io"
