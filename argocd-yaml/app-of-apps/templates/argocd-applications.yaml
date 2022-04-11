@@ -10,9 +10,9 @@ spec:
     helm:
       parameters:
       - name: runenv
-        value: {{ .Values.runenv }}
+        value: {{ .Values.runenv | quote }}
       - name: number
-        value: {{ .Values.number }}
+        value: {{ .Values.number | quote }}
     path: argocd-applications
     repoURL: https://github.com/martivo/kind-lab.git
     targetRevision: HEAD

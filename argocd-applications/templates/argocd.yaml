@@ -15,9 +15,9 @@ spec:
     helm:
       parameters:
       - name: runenv
-        value: {{ .Values.runenv }}
+        value: {{ .Values.runenv | quote }}
       - name: number
-        value: {{ .Values.number }}
+        value: {{ .Values.number | quote }}
   syncPolicy:
     automated:
       prune: true

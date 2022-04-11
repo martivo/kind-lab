@@ -29,8 +29,8 @@ do
 done
 
 #Create app of apps in argocd
-helm template argocd-yaml/app-of-apps/ --set runenv="test" --set number="$1" | kubectl --context kind-test apply -n argocd -f-
-helm template argocd-yaml/app-of-apps/ --set runenv="prod" --set number="$1" | kubectl --context kind-prod apply -n argocd -f-
+helm template argocd-yaml/app-of-apps/ --set runenv="test" --set number=$1 | kubectl --context kind-test apply -n argocd -f-
+helm template argocd-yaml/app-of-apps/ --set runenv="prod" --set number=$1 | kubectl --context kind-prod apply -n argocd -f-
 
 exit 0
 prod_ip=$(kubectl --context=kind-prod get svc -n haproxy haproxy-ingress --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
