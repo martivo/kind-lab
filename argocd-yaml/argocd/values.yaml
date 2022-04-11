@@ -1,7 +1,7 @@
 
 internaldomain: "local"
 
-registry: ""
+registry: "kreg.learn.entigo.io/hub"
 nodeSelector:
   node-role.kubernetes.io/control-plane: ""
 
