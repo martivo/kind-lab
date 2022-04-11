@@ -7,9 +7,13 @@ networking:
   ipFamily: ipv4
 nodes:
 - role: control-plane
+  image: kreg.learn.entigo.io/hub/kindest/node:v1.21.1
 - role: control-plane
+  image: kreg.learn.entigo.io/hub/kindest/node:v1.21.1
 - role: control-plane
+  image: kreg.learn.entigo.io/hub/kindest/node:v1.21.1
 - role: worker
+  image: kreg.learn.entigo.io/hub/kindest/node:v1.21.1
   kubeadmConfigPatches:
   - |
     kind: JoinConfiguration
@@ -18,6 +22,7 @@ nodes:
         node-labels: "ingress=true"
         register-with-taints: "ingress=true:NoSchedule"
 - role: worker
+  image: kreg.learn.entigo.io/hub/kindest/node:v1.21.1
   kubeadmConfigPatches:
   - |
     kind: JoinConfiguration
@@ -26,6 +31,7 @@ nodes:
         node-labels: "ingress=true"
         register-with-taints: "ingress=true:NoSchedule"
 - role: worker
+  image: kreg.learn.entigo.io/hub/kindest/node:v1.21.1
   kubeadmConfigPatches:
   - |
     kind: JoinConfiguration
@@ -34,6 +40,7 @@ nodes:
         node-labels: "monitoring=true"
         register-with-taints: "monitoring=true:NoSchedule"
 - role: worker
+  image: kreg.learn.entigo.io/hub/kindest/node:v1.21.1
   kubeadmConfigPatches:
   - |
     kind: JoinConfiguration
@@ -42,5 +49,8 @@ nodes:
         node-labels: "monitoring=true"
         register-with-taints: "monitoring=true:NoSchedule"
 - role: worker
+  image: kreg.learn.entigo.io/hub/kindest/node:v1.21.1
 - role: worker
+  image: kreg.learn.entigo.io/hub/kindest/node:v1.21.1
 - role: worker
+  image: kreg.learn.entigo.io/hub/kindest/node:v1.21.1
