@@ -1,6 +1,6 @@
 
 runenv: ""
-domain: ""
+number: ""
 
 web:
   replicaCount: 2

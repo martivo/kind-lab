@@ -1,5 +1,5 @@
 
-domain: "local"
+number: ""
 
 registry: "kreg.learn.entigo.io/hub"
 nodeSelector:
