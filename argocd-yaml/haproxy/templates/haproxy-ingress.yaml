@@ -188,7 +188,7 @@ spec:
       serviceAccountName: {{ .Release.Name }}-ingress
       containers:
       - name: haproxy-ingress
-        image: haproxytech/kubernetes-ingress:1.7.3
+        image: {{ .Values.registry }}/haproxytech/kubernetes-ingress:1.7.3
         args:
           - --configmap={{ .Release.Name }}/{{ .Release.Name }}-ingress
           - --default-backend-service={{ .Release.Name }}/{{ .Release.Name }}-ingress-default-backend
@@ -235,7 +235,7 @@ spec:
               fieldPath: metadata.namespace
       initContainers:
         - name: sysctl
-          image: busybox:musl
+          image: {{ .Values.registry }}/library/busybox:musl
           command:
             - /bin/sh
             - -c

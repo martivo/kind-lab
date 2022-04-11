@@ -4,12 +4,12 @@ externaldomain: ""
 
 web:
   replicaCount: 2
-  image: entigolabs/entigo-kubernetes-training-application:web-v1
+  image: kreg.learn.entigo.io/hub/entigolabs/entigo-kubernetes-training-application:web-v1
   
 api:
   replicaCount: 2
-  image: entigolabs/entigo-kubernetes-training-application:api-v1
+  image: kreg.learn.entigo.io/hub/entigolabs/entigo-kubernetes-training-application:api-v1
   redisHost: redis
 
 redis:
-  image: redis:6
+  image: kreg.learn.entigo.io/hub/library/redis:6

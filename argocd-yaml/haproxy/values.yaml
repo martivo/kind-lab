@@ -1,5 +1,5 @@
 
-
+registry: "kreg.learn.entigo.io/hub"
 route53domain: ""
 httpport: "80"
 httpsport: "443"
