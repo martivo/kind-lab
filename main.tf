@@ -246,15 +246,41 @@ resource "aws_route53_record" "kind" {
   records = [aws_instance.kind[count.index].public_ip]
 }
 
-resource "aws_route53_record" "argocd" {
+resource "aws_route53_record" "argocd-prod" {
   count = var.students
   zone_id = var.dns
-  name = "argocd-${count.index + 1}"
+  name = "argocd-prod-${count.index + 1}"
   type = "A"
   ttl = 60
   records = [aws_instance.kind[count.index].public_ip]
 }
 
+resource "aws_route53_record" "argocd-test" {
+  count = var.students
+  zone_id = var.dns
+  name = "argocd-test-${count.index + 1}"
+  type = "A"
+  ttl = 60
+  records = [aws_instance.kind[count.index].public_ip]
+}
+
+resource "aws_route53_record" "web-prod" {
+  count = var.students
+  zone_id = var.dns
+  name = "web-prod-${count.index + 1}"
+  type = "A"
+  ttl = 60
+  records = [aws_instance.kind[count.index].public_ip]
+}
+
+resource "aws_route53_record" "web-test" {
+  count = var.students
+  zone_id = var.dns
+  name = "web-test-${count.index + 1}"
+  type = "A"
+  ttl = 60
+  records = [aws_instance.kind[count.index].public_ip]
+}
 
 resource "aws_route53_record" "registry" {
   zone_id = var.dns
