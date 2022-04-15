@@ -1,14 +1,21 @@
 #!/bin/bash
+#Paigaldatakse lisa tööriistad.
 apt install -y git vim curl
+#Paigaldatakse docker tarkvara.
 curl -fsSL https://get.docker.com/ | sh
 
+#Seadistakse docker tarkvara nimeserver.
 echo '{"dns":["8.8.8.8"]}' > /etc/docker/daemon.json
 systemctl restart docker
 systemctl enable docker
 
+#Paigaldatakse docker-compose
 curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64" -o /usr/bin/docker-compose && chmod +x /usr/bin/docker-compose
+
+#Laetakse alla ja pakitakse lahti harbour.io tarkvara.
 wget https://github.com/goharbor/harbor/releases/download/v2.3.2/harbor-online-installer-v2.3.2.tgz && tar xvzf harbor-online-installer-v2.3.2.tgz
 
+#Seadistatakse harbour.io tarkvara.
 cat << EOF >  harbor/harbor.yml
 hostname: kreg.learn.entigo.io
 http:
@@ -54,10 +61,13 @@ proxy:
     - trivy
 EOF
 
+#Paigaldatakse harbour.io tarkvara.
 cd harbor/ && ./install.sh
 
+#Seadistatkse registri aadress.
 registryurl="https://kreg.learn.entigo.io"
 
+#Oodatakse et registri teenus tuleks üles.
 code=0
 while [ $code -ne 200 ]
 do
@@ -66,6 +76,7 @@ do
   code=$(curl --write-out '%{http_code}' --silent --output /dev/null $registryurl)
 done
 
+#Seadistatakse puhverserver hub.docker.com jaoks.
 curl "$registryurl/api/v2.0/registries" \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json' \
