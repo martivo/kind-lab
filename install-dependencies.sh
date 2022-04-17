@@ -31,6 +31,10 @@ echo "fs.inotify.max_user_instances=8192
 fs.inotify.max_user_watches=524288" > /etc/sysctl.d/local.conf
 sysctl -p /etc/sysctl.d/local.conf
 
+#Kustutame AWS SSM agendi
+#https://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-uninstall-agent.html
+snap remove amazon-ssm-agent
+
 #Lisatakse kasutaja mida koolitatav kasutab.
 /usr/sbin/useradd -m -s /bin/bash user$1
 #Lubatakse kasutajal docker käske kasutada

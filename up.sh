@@ -1,5 +1,12 @@
 #!/bin/bash
 
+#Kontrollime kas esimeseks parameetriks on antud koolitatava number.
+if [ "$1" == "" ]
+then
+  echo "Skripti esimene parameeter peab olema koolitatava number."
+  exit 1
+fi
+
 #Luuakse kaks kubernetese kobarat kind tööriistaga.
 kind create cluster --config kind-test.yaml
 kind create cluster --config kind-prod.yaml

@@ -11,7 +11,7 @@ variable "aws-region" {
 }
 
 variable "kind-instance-type" {
-  default     = "t3.large"
+  default     = "t3.xlarge"
   type        = string
   description = "Worker Node EC2 instance type"
 }
