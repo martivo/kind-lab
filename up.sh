@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#Kontrollime kas esimeseks parameetriks on antud koolitatava number.
+#Kontrollitakse kas esimeseks parameetriks on antud koolitatava number.
 if [ "$1" == "" ]
 then
   echo "Skripti esimene parameeter peab olema koolitatava number."
