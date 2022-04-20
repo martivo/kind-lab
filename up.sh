@@ -42,7 +42,7 @@ helm template argocd-yaml/app-of-apps/ --set runenv="prod" --set number=$1 | kub
 
 #Suuname internetist tuleva 80 ja 8080 pordid prod ja test kobara HAproxy teenuse IP peale.
 prod_ip=""
-while [ $prod_ip == "" ]
+while [ "$prod_ip" == "" ]
 do
   prod_ip=$(kubectl --context=kind-prod get svc -n haproxy haproxy-ingress --output jsonpath='{.status.loadBalancer.ingress[0].ip}')  
   echo "Waiting for prod cluster HAproxy loadbalancer service."
@@ -53,7 +53,7 @@ sudo iptables -I FORWARD -p tcp -d $prod_ip --match multiport --dports 80 -m sta
 sudo iptables -t nat -I PREROUTING -p tcp -i ens5 --dport 80 -j DNAT --to-destination $prod_ip:80
 
 test_ip=""
-while [ $prod_ip == "" ]
+while [ "$prod_ip" == "" ]
 do
   test_ip=$(kubectl --context=kind-test get svc -n haproxy haproxy-ingress --output jsonpath='{.status.loadBalancer.ingress[0].ip}')  
   echo "Waiting for prod cluster HAproxy loadbalancer service."
